@@ -8,7 +8,7 @@ const CreatePosts = () => {
     const [content, setContent] = useState("");
 
     const onPostSubmit = async () => {
-        let result = await axios.post("https://my-worker.andrewzhang1635.workers.dev", {"title": title, "username":username, "content": content})
+        let result = await axios.post("https://my-worker.andrewzhang1635.workers.dev", JSON.stringify({"title": title, "username":username, "content": content}))
         if (result.error) {
             console.log(result.error)
         }
