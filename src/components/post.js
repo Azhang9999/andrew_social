@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
+interface PostsProps {
+    uselessInt : int;
+}
 
-const Posts = () => {
+const Posts = (props: PostsProps) => {
     const [posts, setPosts] = useState([]);
     const [error, setError] = useState("");
     const [fetched, setFetched] = useState("not fetched");
@@ -24,7 +27,7 @@ const Posts = () => {
         const p = await getPosts();
         console.log(p);
         setPosts(p);
-    }, []);
+    }, [props.uselessInt]);
 
     return (
         <div>

@@ -1,16 +1,27 @@
 import React, { useEffect, useState } from "react";
 import {Avatar, Box, Button, Container, Grid, Paper, TextField, Theme, Typography} from '@mui/material';
 import axios from 'axios';
+import Posts from "./post"
 
-const CreatePosts = () => {
+interface CreatePostsProps {
+    updatePost: () => null;
+}
+
+const CreatePosts = (createPostsProps: CreatePostsProps) => {
     const [title, setTitle] = useState("");
     const [username, setUsername] = useState("");
     const [content, setContent] = useState("");
 
     const onPostSubmit = async () => {
-        let result = await axios.post("https://my-worker.andrewzhang1635.workers.dev", JSON.stringify({"title": title, "username":username, "content": content}))
+        let result = await axios.post("https://my-worker.andrewzhang1635.workers.dev",
+            JSON.stringify({"title": title, "username":username, "content": content}))
         if (result.error) {
             console.log(result.error)
+        } else {
+            setTitle("");
+            setUsername("");
+            setContent("");
+            createPostsProps.updatePost();
         }
     }
     
