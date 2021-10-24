@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import {Card, Container, Grid, Typography} from '@mui/material';
+import styles from "./Styles.js"
+
 interface PostsProps {
     uselessInt : int;
 }
@@ -6,15 +9,8 @@ interface PostsProps {
 const Posts = (props: PostsProps) => {
     const [posts, setPosts] = useState([]);
     const [error, setError] = useState("");
-    const [fetched, setFetched] = useState("not fetched");
+    const classes = styles();
 
-    async function readableToString2(readable) {
-        let result = '';
-        for await (const chunk of readable) {
-            result += chunk;
-        }
-        return result;
-    }
 
     useEffect(async () => {
         console.log("GETTING POSTS");
@@ -22,6 +18,7 @@ const Posts = (props: PostsProps) => {
             const resp = await fetch(
                 "https://my-worker.andrewzhang1635.workers.dev",
                 {headers: {'Content-Type': 'application/json'}, method: "GET"})
+                .catch(error => setError(error))
             return resp.json();
         };
         const p = await getPosts();
@@ -30,16 +27,39 @@ const Posts = (props: PostsProps) => {
     }, [props.uselessInt]);
 
     return (
-        <div>
-            <h1>Your Social Media Posts</h1>
+        <Container className={"container"}>
+
+            <Typography variant={'h3'}>Your Social Media Posts</Typography>
             {posts.filter(post => (post != null)).map((post) => (
-                <div title={post.title} user={post.username}>
-                    <h2>{post.title + " by " + post.username}</h2>
-                    {post.content}
-                </div>
+                <Grid item paddingTop={3}>
+                    <Card className={classes.card}>
+                        <Grid container direction={"column"}  paddingTop={2} paddingLeft={3} paddingRight={3}>
+                            <Grid container direction={"row"} spacing={2} paddingBottom={2}>
+                                <Grid item xs={8}>
+                                    <Typography variant="h4" component={'h4'}>
+                                        {post.title}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs>
+                                    <Typography variant="h6" component={'h6'}>
+                                        {post.username}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                            <Grid container direction={"row"} paddingBottom={3}>
+                                <Grid item xs={12}>
+                                    <Typography variant={"span"} component={"span"} >
+                                        {post.content}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Card>
+                </Grid>
             ))}
             {error}
-        </div>
+        </Container>
+
     );
 };
 
